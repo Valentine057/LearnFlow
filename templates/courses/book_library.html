@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Book library{% endblock %}
+{% block content %}
+<section class="listing-head">
+  <p class="eyebrow">LearnFlow resources</p>
+  <h1>Course <em>library.</em></h1>
+  <p>Books and reading materials selected by our teachers to support your learning.</p>
+  {% if user.is_authenticated %}
+    {% if user.is_staff or user.school_owner_profile %}
+      <a class="button button-dark" href="{% url 'book_create' %}">Add a book →</a>
+    {% elif user.instructor_profile %}
+      <a class="button button-dark" href="{% url 'book_create' %}">Add a book →</a>
+    {% endif %}
+  {% endif %}
+</section>
+<section class="library-section">
+  {% if messages %}
+    <div class="library-messages">
+      {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+    </div>
+  {% endif %}
+  {% for book in books %}
+    <article class="library-book">
+      <div class="library-book-icon" aria-hidden="true">BOOK</div>
+      <div class="library-book-details">
+        <p class="eyebrow">{{ book.course.category.name }} · {{ book.course.title }}</p>
+        <h2>{{ book.title }}</h2>
+        {% if book.author %}<p class="library-author">By {{ book.author }}</p>{% endif %}
+        {% if book.description %}<p>{{ book.description }}</p>{% endif %}
+      </div>
+      <div class="library-book-actions">
+        {% if book.course_id in accessible_course_ids %}
+          <a class="button button-dark" href="{% url 'download_book' book.course.slug book.id %}">Download</a>
+        {% elif user.is_authenticated %}
+          <a class="text-link" href="{% url 'course_detail' book.course.slug %}">Enrol to access</a>
+        {% else %}
+          <a class="text-link" href="{% url 'login' %}?next={{ request.path }}">Log in to access</a>
+        {% endif %}
+        {% if book.course_id in manageable_course_ids %}
+          <a class="text-link" href="{% url 'book_edit' book.id %}">Edit</a>
+          <a class="text-link" href="{% url 'book_delete' book.id %}">Delete</a>
+        {% endif %}
+      </div>
+    </article>
+  {% empty %}
+    <div class="library-empty">
+      <h2>No books in the library yet</h2>
+      <p>Course reading materials will appear here when they are added.</p>
+      {% if user.is_authenticated and user.is_staff %}
+        <a class="button button-dark" href="{% url 'book_create' %}">Add the first book →</a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</section>
+{% endblock %}

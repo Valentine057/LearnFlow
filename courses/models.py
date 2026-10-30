@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from accounts.models import InstructorProfile
 
@@ -61,6 +62,24 @@ class Lesson(models.Model):
     class Meta:
         ordering = ['order']
         unique_together = ['course', 'order']
+
+    def __str__(self):
+        return f'{self.course.title}: {self.title}'
+
+
+class Book(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='books')
+    title = models.CharField(max_length=180)
+    author = models.CharField(max_length=180, blank=True)
+    description = models.TextField(blank=True)
+    file = models.FileField(
+        upload_to='course_books/',
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'epub'])],
+    )
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['title']
 
     def __str__(self):
         return f'{self.course.title}: {self.title}'

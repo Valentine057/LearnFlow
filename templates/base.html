@@ -14,11 +14,11 @@
 <header class="site-header">
   <a class="brand" href="{% url 'home' %}"><span class="brand-mark">↗</span><span>learn<span class="brand-accent">flow</span></span></a>
   <nav class="nav-links">
-    <a href="{% url 'course_list' %}">Explore</a><a href="{% url 'about' %}">Our mission</a>
-    {% if user.is_authenticated %}<a href="{% url 'dashboard' %}">Dashboard</a><a class="nav-pill" href="{% url 'logout' %}">Sign out</a>{% else %}<a href="{% url 'login' %}">Log in</a><a class="nav-pill" href="{% url 'register' %}">Start learning</a>{% endif %}
+    <a href="{% url 'course_list' %}">Explore</a><a href="{% url 'book_library' %}">Library</a><a href="{% url 'about' %}">Our mission</a>
+    {% if user.is_authenticated %}<a href="{% url 'dashboard' %}">Dashboard</a>{% if user.is_staff %}<a href="{% url 'admin:index' %}">School admin</a>{% endif %}<a class="nav-pill" href="{% url 'logout' %}">Sign out</a>{% else %}<a href="{% url 'login' %}">Log in</a><a class="nav-pill" href="{% url 'register' %}">Start learning</a>{% endif %}
   </nav>
 </header>
 <main>{% block content %}{% endblock %}</main>
-<footer class="footer"><div><a class="brand" href="{% url 'home' %}"><span class="brand-mark">↗</span><span>learn<span class="brand-accent">flow</span></span></a><p>Practical skills. Local perspective.<br>More doors opened.</p></div><div class="footer-links"><a href="{% url 'course_list' %}">Browse courses</a><a href="{% url 'contact' %}">Contact</a></div><small>© 2026 LearnFlow Africa</small></footer>
+<footer class="footer"><div><a class="brand" href="{% url 'home' %}"><span class="brand-mark">↗</span><span>learn<span class="brand-accent">flow</span></span></a><p>Practical skills. Local perspective.<br>More doors opened.</p></div><div class="footer-links"><a href="{% url 'course_list' %}">Browse courses</a><a href="{% url 'book_library' %}">Book library</a><a href="{% url 'contact' %}">Contact</a></div><small>© 2026 LearnFlow Africa</small></footer>
 </body>
 </html>
